@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Prescription } from '../models/Prescription';
 
-const API_URL = 'http://localhost:8080/api/prescription/';
+const API_URL = 'api/v1/prescriptions';
 
 
 @Injectable({
@@ -24,16 +24,16 @@ export class PrescriptionManagementService {
   }
 
     getPrescriptions(searchQuery: any): Observable<any> {
-      const options = { params :new HttpParams({fromString: searchQuery}) }
+      const options = { params :this.getHttpParams(searchQuery) }
       return this.http.get(API_URL, options);
     }
 
     updatePrescription(body: Prescription, id: number): Observable<any> {
-      return this.http.put(API_URL + id, body);
+      return this.http.put(API_URL + '/' + id, body);
     }
 
     deletePrescription(id: number): Observable<any> {
-      return this.http.delete(API_URL + id);
+      return this.http.delete(API_URL+ '/' +  id);
     }
 
     createPrescription(body: Prescription): Observable<any> {

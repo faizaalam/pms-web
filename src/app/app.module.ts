@@ -5,9 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { PrescriptionManagementComponent } from './prescription-management/prescription-management.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NlmDataComponent } from './nlm-data/nlm-data.component';
+import { FormComponent } from './prescription-management/form/form.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AngularMaterialModule } from './material.module';
 
 
 @NgModule({
@@ -15,13 +19,18 @@ import { NlmDataComponent } from './nlm-data/nlm-data.component';
     AppComponent,
     LoginComponent,
     PrescriptionManagementComponent,
-    NlmDataComponent
+    NlmDataComponent,
+    FormComponent
   ],
   imports: [
     BrowserModule,
+    AngularMaterialModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

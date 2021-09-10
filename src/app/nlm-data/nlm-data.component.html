@@ -1,0 +1,18 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Source Name</th>
+      <th scope="col">Source Disclaimer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of data.interactionTypeGroup">
+      <td>{{row.sourceName}}</td>
+      <td>{{row.sourceDisclaimer}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+    <p>Disclamer**: {{data?.nlmDisclaimer}}</p>

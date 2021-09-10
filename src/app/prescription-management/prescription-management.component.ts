@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscriber } from 'rxjs';
 import { Prescription } from '../models/Prescription';
 import { PrescriptionManagementService } from '../_services/prescription-management.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FormComponent } from './form/form.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-prescription-management',
@@ -9,57 +12,69 @@ import { PrescriptionManagementService } from '../_services/prescription-managem
   styleUrls: ['./prescription-management.component.scss']
 })
 export class PrescriptionManagementComponent implements OnInit, OnDestroy {
-  subscriptions : any;
+  subscriptions : any = {};
   prescriptions: Prescription[] = [];
-  constructor(private prescriptionService: PrescriptionManagementService ) {
+  selectedPrescription : Prescription | undefined | null;
+  showPrescriptionForm = false;
+  reportDate = new Date();
+  @ViewChild('formComponent') formComponent!: FormComponent;;
+
+  constructor(private prescriptionService: PrescriptionManagementService) {
 
    }
 
   ngOnInit(): void {
     this.fetchPrescriptions();
-    this.newEntryPrecription();
-  }
+ }
 
   fetchPrescriptions() {
-  this.subscriptions.fetchDataSub = this.prescriptionService.getPrescriptions(new Map()).subscribe(
+  this.subscriptions.fetchDataSub = this.prescriptionService.getPrescriptions(new Map().set('prescriptionDate', moment(this.reportDate).format("YYYY-MM-DD") ) ).subscribe(
       data => {
         this.prescriptions = data;
       }
     );
   }
 
-  newEntryPrecription() {
-    let prescription = new Prescription();
-    prescription.age = 19;
-    prescription.name = 'faiza';
-    prescription.diagnosis = 'cold';
-    prescription.gender = 'FEMALE';
-    prescription.prescriptionDate = new Date();
-    prescription.visitDate = new Date();
-    prescription.prescribedMedicine = 'Alatrol';
-
-    this.subscriptions.createDataSub = this.prescriptionService.createPrescription(prescription).subscribe(
-      data => {
-       console.log("Created Successfully");
-      }
-    );
+  displayStyle = "none";
+  
+  openPopup() {
+    this.displayStyle = "block";
   }
-  editPrescription(id : number) {
-    let prescription = new Prescription();
 
-    this.subscriptions.editDataSub = this.prescriptionService.updatePrescription(prescription, id).subscribe(
-      data => {
-       console.log("Updated Successfully");
-      }
-    );
+  closePopup() {
+    this.displayStyle = "none";
+    this.showPrescriptionForm = false;
+    this.selectedPrescription= null;
+    this.fetchPrescriptions();
   }
+
+  
+ 
+  createForm() {
+    this.showPrescriptionForm = true;
+    this.openPopup();
+  }
+  showForm(selectedPrescription: Prescription) {
+      this.selectedPrescription =  selectedPrescription;
+      this.showPrescriptionForm = true;
+      this.openPopup();
+  }
+
+
   deletePrescription(id : number){
-    this.subscriptions.editDataSub = this.prescriptionService.deletePrescription( id).subscribe(
+    this.subscriptions.deleteDataSub = this.prescriptionService.deletePrescription( id).subscribe(
       data => {
+        this.fetchPrescriptions();
        console.log("Deleted Successfully");
       }
     );
   }
+
+
+
+searchData() {
+  this.fetchPrescriptions();
+}
 
   ngOnDestroy() {
     for(let keys in this.subscriptions) {

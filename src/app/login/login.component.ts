@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {AuthService} from '../_services/auth.service';
 @Component({
   selector: 'app-login',
@@ -17,7 +18,10 @@ export class LoginComponent implements OnInit {
     errorMessage = '';
     roles: string[] = [];
   
-    constructor(private authService: AuthService) { }
+    constructor(
+      private router: Router,
+      private route: ActivatedRoute,
+      private authService: AuthService) { }
   
     ngOnInit(): void {
       if (this.authService.getToken()) {
@@ -48,5 +52,9 @@ export class LoginComponent implements OnInit {
   
     reloadPage(): void {
       window.location.reload();
+      setTimeout(() => {
+        this.router.navigate(['/prescription-management']);
+      }, 500);
+
     }
   }

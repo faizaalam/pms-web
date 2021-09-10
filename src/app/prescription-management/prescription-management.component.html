@@ -1,10 +1,24 @@
+<div>
+  <mat-form-field appearance="fill" >
+    <mat-label>Prescription Date</mat-label>
+    <input matInput [matDatepicker]="picker3" value="" [(ngModel)]="reportDate" >
+    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+    <mat-datepicker #picker3></mat-datepicker>
+</mat-form-field>
+<button mat-button (click)="fetchPrescriptions()"><i class="icon-search"></i>Search</button>
+
+  <button mat-button (click)="createForm()"><i class="icon-plus"></i>Prescription Entry</button>
+</div>
 <table class="table">
     <thead class="thead-dark">
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">age</th>
-        <th scope="col">prescriptionDate</th>
-        <th scope="col">diagnosis</th>
+        <th scope="col">Age</th>
+        <th scope="col">Prescription Date</th>
+        <th scope="col">Visit Date</th>
+        <th scope="col">Diagnosis</th>
+        <th scope="col">Prescribed Medicine</th>
+        <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -13,9 +27,34 @@
         <td>{{row.name}}</td>
         <td>{{row.age}}</td>
         <td>{{row.prescriptionDate}}</td>
+        <td>{{row.visitDate}}</td>
         <td>{{row.diagnosis}}</td>
-
+        <td>{{row.prescribedMedicine}}</td>
+        <td>
+          <button type="button" class="btn btn-primary"(click)="showForm(row)">
+            <i class="icon-edit"></i>
+          </button>
+          <button pButton type="button" class="btn btn-primary" (click)="deletePrescription(row.id)"><i class="icon-trash"></i></button> </td>
       </tr>
    
     </tbody>
   </table>
+
+
+<div
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Prescription Form</h4>
+        </div>
+        <div class="modal-body">
+          <app-prescription-form [selectedPrescription]="selectedPrescription" (onSave)="closePopup()" (onCancel)="closePopup()" #formComponent></app-prescription-form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
