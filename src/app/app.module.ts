@@ -7,13 +7,15 @@ import { LoginComponent } from './login/login.component';
 import { PrescriptionManagementComponent } from './prescription-management/prescription-management.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NlmDataComponent } from './nlm-data/nlm-data.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    PrescriptionManagementComponent
+    PrescriptionManagementComponent,
+    NlmDataComponent
   ],
   imports: [
     BrowserModule,

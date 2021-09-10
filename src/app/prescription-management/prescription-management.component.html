@@ -1,1 +1,21 @@
-<p>prescription-management works!</p>
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">age</th>
+        <th scope="col">prescriptionDate</th>
+        <th scope="col">diagnosis</th>
+      </tr>
+    </thead>
+    <tbody>
+        
+      <tr *ngFor="let row of prescriptions">
+        <td>{{row.name}}</td>
+        <td>{{row.age}}</td>
+        <td>{{row.prescriptionDate}}</td>
+        <td>{{row.diagnosis}}</td>
+
+      </tr>
+   
+    </tbody>
+  </table>
