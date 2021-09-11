@@ -17,7 +17,14 @@ export class FormComponent implements OnInit, OnChanges {
   @Output('onCancel') onCancel = new EventEmitter();
   @Output('onSave') onSave = new EventEmitter();
 
+  genders:any[]  = [];
+
   ngOnInit(): void {
+    this.genders  =[
+      {label: "Select gender", value: null},
+    {label: "MALE", value: "MALE"},
+    {label: "FEMALE", value: "FEMALE"}
+  ];
     this.prepareForm(this.selectedPrescription ? this.selectedPrescription : new Prescription());
   }
 
@@ -31,9 +38,9 @@ export class FormComponent implements OnInit, OnChanges {
     prescription = prescription ? prescription: new Prescription();
     this.prescriptionForm = this.fb.group({
       name: [prescription.name, [Validators.required,Validators.minLength(1), Validators.maxLength(30), Validators.pattern(/[a-zA-Z0-9]/)]],
-      age: [prescription.age, [Validators.required,Validators.minLength(1), Validators.maxLength(3)]],
+      age: [prescription.age, [Validators.required,Validators.minLength(1), Validators.maxLength(3), Validators.min(0), Validators.max(200)]],
       prescriptionDate: [prescription.prescriptionDate ? new Date(prescription.prescriptionDate) : new Date(), [Validators.required]],
-      visitDate: [prescription.visitDate ? new Date(prescription.visitDate) : new Date(), [Validators.required]],
+      visitDate: [prescription.visitDate ? new Date(prescription.visitDate) : new Date()],
       diagnosis: [prescription.diagnosis, [Validators.required]],
       gender: [prescription.gender, [Validators.required]],
       prescribedMedicine: [prescription.prescribedMedicine, [Validators.required]]
@@ -54,7 +61,8 @@ export class FormComponent implements OnInit, OnChanges {
     this.subscriptions.createDataSub = this.prescriptionService.createPrescription(prescription).subscribe(
       data => {
        console.log("Created Successfully");
-       this.onSave.emit();
+       this.prepareForm(new Prescription());
+       this.onSave.emit({event: 'Create'});
       }
     );
   }
@@ -65,34 +73,41 @@ export class FormComponent implements OnInit, OnChanges {
     this.subscriptions.editDataSub = this.prescriptionService.updatePrescription(prescription, id).subscribe(
       data => {
        console.log("Updated Successfully");
-       this.onSave.emit();
+       this.prepareForm(new Prescription());
+       this.onSave.emit({event: 'Update'});
       }
     );
   }
 
   close() {
+    this.selectedPrescription = null;
     this.prepareForm(new Prescription());
-    this.onCancel.emit();
+    this.onCancel.emit({event: 'Cancel'});
   }
 
   getErrorMessage(controlName: any) {
-    // if (!this.prescriptionForm && this.prescriptionForm.get(controlName)) {
-    //   return '';
-    // }
-    // if (this.prescriptionForm.get(controlName).hasError('required')) {
-    //   return 'You must enter a value';
-    // }
+    if (!this.prescriptionForm.controls[controlName]) {
+      return '';
+    }
+    if (this.prescriptionForm.controls[controlName].hasError('required')) {
+      return 'You must enter a value';
+    }
 
-    // if (this.prescriptionForm?.get(controlName).hasError('minlength')) {
-    //   return 'Cannot be less than 1 ';
-    // }
+    if (this.prescriptionForm.controls[controlName].hasError('max')) {
+      return 'Max validation exceeded';
+    }
 
-    // if (this.prescriptionForm?.get(controlName).hasError('maxlength')) {
-    //   return 'Cannot be greater than 3';
-    // }
-    // if (this.prescriptionForm?.get(controlName).hasError('pattern')) {
-    //   return 'Character not allowed';
-    // }
+
+    if (this.prescriptionForm.controls[controlName].hasError('minlength')) {
+      return 'Cannot be less than 1 ';
+    }
+
+    if (this.prescriptionForm.controls[controlName].hasError('maxlength')) {
+      return 'Cannot be greater than 3';
+    }
+    if (this.prescriptionForm.controls[controlName].hasError('pattern')) {
+      return 'Character not allowed';
+    }
     return '';
   }
 

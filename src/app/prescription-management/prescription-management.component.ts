@@ -17,7 +17,39 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
   selectedPrescription : Prescription | undefined | null;
   showPrescriptionForm = false;
   reportDate = new Date();
-  @ViewChild('formComponent') formComponent!: FormComponent;;
+  fromMonth = new Date().getUTCMonth();
+  
+  toMonth = new Date().getUTCMonth();
+  showAlert = false;
+  notificationMessage = '';
+  @ViewChild('formComponent') formComponent!: FormComponent;
+
+  months = [
+    {label: 'Select month' , value: null },
+    {label: 'January', value: 1},
+    {label: 'February', value: 2},
+
+    {label: 'March', value: 3},
+
+    {label: 'April', value: 4},
+
+    {label: 'May', value: 5},
+
+    {label: 'June', value: 6},
+
+    {label: 'July', value: 7},
+
+    {label: 'August', value: 8},
+
+    {label: 'September', value: 9},
+
+    {label: 'October', value: 10},
+
+    {label: 'November', value: 11},
+
+    {label: 'December', value: 12},
+
+  ]
 
   constructor(private prescriptionService: PrescriptionManagementService) {
 
@@ -27,10 +59,20 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
     this.fetchPrescriptions();
  }
 
-  fetchPrescriptions() {
-  this.subscriptions.fetchDataSub = this.prescriptionService.getPrescriptions(new Map().set('prescriptionDate', moment(this.reportDate).format("YYYY-MM-DD") ) ).subscribe(
+  fetchPrescriptions(showReport = false) {
+    let searchQuery = new Map();
+    if (showReport) {
+      searchQuery = new Map().set('reportDate',  moment(this.reportDate).format("YYYY-MM-DD") ) ;
+    } else {
+      searchQuery =  new Map().set('fromMonth', this.fromMonth).set('toMonth', this.toMonth) 
+    }
+  this.subscriptions.fetchDataSub = this.prescriptionService.getPrescriptions(searchQuery).subscribe(
       data => {
         this.prescriptions = data;
+        if (showReport) {
+          this.showAlert = true;
+          this.notificationMessage = "Report count :" + data.length;
+        }
       }
     );
   }
@@ -39,19 +81,25 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
   
   openPopup() {
     this.displayStyle = "block";
+
   }
 
-  closePopup() {
+  closePopup(event:any) {
     this.displayStyle = "none";
     this.showPrescriptionForm = false;
     this.selectedPrescription= null;
     this.fetchPrescriptions();
+    if(event && event.event != 'Cancel') {
+      this.showAlert = true;
+      this.notificationMessage = event.event == 'Update' ? 'Prescription updated' : 'Prescription created' + ' succesfully';
+    }
   }
 
   
  
   createForm() {
     this.showPrescriptionForm = true;
+    this.selectedPrescription= null;
     this.openPopup();
   }
   showForm(selectedPrescription: Prescription) {
@@ -65,12 +113,16 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
     this.subscriptions.deleteDataSub = this.prescriptionService.deletePrescription( id).subscribe(
       data => {
         this.fetchPrescriptions();
-       console.log("Deleted Successfully");
+        this.showAlert = true;
+        this.notificationMessage = 'Prescription entry deleted Successfully';
+        console.log("Deleted Successfully");
       }
     );
   }
 
-
+  showReport() {
+    this.fetchPrescriptions(true);
+  }
 
 searchData() {
   this.fetchPrescriptions();

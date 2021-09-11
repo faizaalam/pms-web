@@ -1,40 +1,62 @@
 
   
     <form [formGroup]="prescriptionForm">
-        <mat-form-field class="example-full-width" style="margin-top: 10px; margin-right: 5px;">
-            <input matInput placeholder="Name"  value="" formControlName="name">
-            <mat-error *ngIf="prescriptionForm.controls.name.invalid">{{getErrorMessage('name')}}</mat-error>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" style="margin-top: 10px;  ">
-            <input matInput placeholder="Age" maxlength="3" value="" formControlName="age">
+        <div cols="1">
+            <mat-form-field class="col-12" style="margin-top: 10px; margin-right: 5px;">
+                <input matInput placeholder="Name"  value="" formControlName="name">
+                <mat-error *ngIf="prescriptionForm.controls.name.invalid">{{getErrorMessage('name')}}</mat-error>
+            </mat-form-field>
+
+    </div>
+    <div cols="2">
+        <mat-form-field class="example-full-width"style="margin-top: 10px;margin-right: 5px;">
+            <input  matInput placeholder="Age" max="120" maxlength="3" value="" formControlName="age">
             <mat-error *ngIf="prescriptionForm.controls.age.invalid">{{getErrorMessage('age')}}</mat-error>
 
+
         </mat-form-field>
-        <mat-form-field class="example-full-width" style="margin-top: 10px; margin-right: 5px;">
-            <input matInput placeholder="Gender"  value="" formControlName="gender">
+        <mat-form-field class="example-full-width"  style="margin-right: 5px;">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender" placeholder="Gender">
+              <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                {{gender.label}}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="prescriptionForm.controls.gender.invalid">{{getErrorMessage('gender')}}</mat-error>
 
-        </mat-form-field>
-        <mat-form-field class="example-full-width" style="margin-top: 10px; margin-right: 5px;">
-            <input matInput placeholder="Diagnosis"  value="" formControlName="diagnosis">
+          </mat-form-field>
+    </div>
+    <div cols="2">
+
+          <mat-form-field  class="example-full-width" style="margin-top: 10px;margin-right: 5px;">
+            <mat-label>Diagnosis</mat-label>
+            <textarea matInput  value="" formControlName="diagnosis"></textarea>
             <mat-error *ngIf="prescriptionForm.controls.diagnosis.invalid">{{getErrorMessage('diagnosis')}}</mat-error>
+ 
         </mat-form-field>
 
-        <mat-form-field class="example-full-width" style="margin-top: 10px;">
-            <input matInput placeholder="Prescribed Medicine"  value="" formControlName="prescribedMedicine">
+        <mat-form-field  class="example-full-width" >
+            <mat-label>Prescribed Medicine</mat-label>
+            <textarea matInput   value="" formControlName="prescribedMedicine"></textarea>
             <mat-error *ngIf="prescriptionForm.controls.prescribedMedicine.invalid">{{getErrorMessage('prescribedMedicine')}}</mat-error>
+ 
         </mat-form-field>
+    </div>
+    <div cols="2">
 
-        <mat-form-field appearance="fill" style="margin-top: 10px;margin-right: 5px;" >
+        <mat-form-field  style="margin-top: 10px;margin-right: 5px;" >
             <mat-label>Prescription Date</mat-label>
             <input matInput [matDatepicker]="picker1" value="" formControlName="prescriptionDate">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1 style="z-index:9999;"></mat-datepicker>
+            <div  style="position: relative !important; z-index: 99999 !important;">
+                <mat-datepicker #picker1></mat-datepicker>
+
+            </div>
             <mat-error *ngIf="prescriptionForm.controls.prescriptionDate.invalid">{{getErrorMessage('prescriptionDate')}}</mat-error>
 
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field class="example-full-width" >
             <mat-label>Visit Date</mat-label>
             <input matInput [matDatepicker]="picker2" value="" formControlName="visitDate">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -42,8 +64,12 @@
             <mat-error *ngIf="prescriptionForm.controls.visitDate.invalid">{{getErrorMessage('visitDate')}}</mat-error>
 
         </mat-form-field>
+</div>
 
-       <div>
+
+
+
+      <div>
            <button class="mat-raised-button mat-primary"(click)="submit()">Save</button>
            <button class="mat-raised-button mat-primary"(click)="close()">Cancel</button>
        </div>
