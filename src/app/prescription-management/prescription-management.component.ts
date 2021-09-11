@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscriber } from 'rxjs';
 import { Prescription } from '../models/Prescription';
 import { PrescriptionManagementService } from '../_services/prescription-management.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormComponent } from './form/form.component';
 import * as moment from 'moment';
 
@@ -17,9 +16,9 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
   selectedPrescription : Prescription | undefined | null;
   showPrescriptionForm = false;
   reportDate = new Date();
-  fromMonth = new Date().getUTCMonth();
+  fromMonth!: number;
   
-  toMonth = new Date().getUTCMonth();
+  toMonth!: number;
   showAlert = false;
   notificationMessage = '';
   @ViewChild('formComponent') formComponent!: FormComponent;
@@ -56,6 +55,10 @@ export class PrescriptionManagementComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit(): void {
+    console.log(new Date());
+    this.fromMonth = new Date().getUTCMonth() + 1;
+    this.toMonth = new Date().getUTCMonth() + 1;
+
     this.fetchPrescriptions();
  }
 
